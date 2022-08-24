@@ -6,9 +6,9 @@ import pytz
 from threading import Thread
 
 on = True
-
-TOKEN = 'MTAwNzQzNDI3MjEyODM4MTA2OA.GY8ze1.oEdJ52ALWqEc4J-JFdh4BGSgiY4ZQ803HFWDok'
-
+token_file = open('TOKEN.txt')
+TOKEN = token_file.read()
+token_file.close()
 client = discord.Client()
 
 
