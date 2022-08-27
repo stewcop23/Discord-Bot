@@ -32,7 +32,7 @@ async def on_message(message):
     global on
     username = str(message.author).split('#')[0]
     channel = str(message.channel.name)
-    user_message = str(message.content)
+    user_message = str(message.content).lower()
 
     if message.author == client.user:
         return
@@ -46,13 +46,13 @@ async def on_message(message):
     if on:
         if channel == 'bot-controls':
 
-            if user_message.lower() == 'test':
+            if user_message == 'test':
                 await message.channel.send('test')
                 
 #----------- Sleep -----------
-            if user_message.lower().split(' ')[0] == 'sleep':
+            if user_message.split(' ')[0] == 'sleep':
 
-                waitlength = float(user_message.lower().split(' ')[1])
+                waitlength = float(user_message.split(' ')[1])
                 await message.channel.send(f'sleeping for {waitlength}')
                 print(f'{username} made me sleep for {waitlength} minutes')
                 args = [waitlength, message]
@@ -60,7 +60,7 @@ async def on_message(message):
                 wait_thread.start()
                 
 #----------- Time -----------
-            if user_message.lower() == 'time':
+            if user_message == 'time':
 
                 pacific = pytz.timezone('Canada/Pacific')
                 pacTime = datetime.now(pacific).strftime("%H:%M:%S")
@@ -88,14 +88,14 @@ async def on_message(message):
                                'chock-a-block': 'The lights may be cactus'}
 
             for word in basic_responces:
-                if user_message.lower() == word:
+                if user_message == word:
                     await message.channel.send(basic_responces[word])
                     print(username, 'used', word)
             
 #----------- Unit Conversion -------
-            if 'convert' in user_message.lower():
+            if 'convert' in user_message:
                 # convert 15 C to F
-                parts = user_message.lower().split(' ')
+                parts = user_message.split(' ')
                 num = int(parts[1])
                 origional_num = num
                 unit_from = parts[2]
@@ -154,7 +154,7 @@ async def on_message(message):
                         num *=  2.237
                     
                 print(num)
-                await message.channel.send(f'{origional_num} {unit_from.upper()} is {round(num*100)/100} {unit_to.upper()}')
+                await message.channel.send(f'{origional_num} {unit_from} is {round(num*100)/100} {unit_to}')
 
                 
                     
@@ -162,7 +162,7 @@ async def on_message(message):
                 
                 
 #----------- Squirrel -----------
-            if user_message.lower() == 'squirrel':
+            if user_message == 'squirrel':
                 print(username, 'used squrrel')
                 eat = random.randint(1, 10)
                 print('^', eat)
@@ -183,7 +183,7 @@ async def on_message(message):
         swears = ['fuck', 'shit', 'cock', 'cunt',
                   'bitch', 'bullshit', 'dick', 'pussy', 'stfu']
         for word in swears:
-            for _ in range(user_message.lower().count(word)):
+            for _ in range(user_message.count(word)):
                 chance = random.randint(1, 10)
                 print(username, 'swore', chance)
                 if chance <= 5:
@@ -196,12 +196,28 @@ async def on_message(message):
                         
 #---------Thankful/Apllologetic Responses------------
         nice_words = {'thanks': 'you\'re welcome', 'cheers': 'no problem',
-                      'sorry': 'it\'s ok', 'im sad': 'it\'s ok'}
+                      'sorry': 'it\'s ok', 'im sad': 'it\'s ok','hi':'hi'}
         
         for word in nice_words:
-            if f'{str(word)} jim' in user_message.lower():
+            if f'{str(word)} jim' in user_message:
                 print(username, 'said', word)
                 await message.channel.send(f'{nice_words[word]} {username}')
+        
+        
+        # if user_message == 'slay':
+        for _ in range(user_message.count('slay')):
+            roll = random.randint(1,100)
+            print(username, 'slayed', roll)
+            if roll == 1:
+                roll = random.randint(0,2)
+                print(f'^roll: {roll}')
+                if roll > 0:
+                    await message.channel.send('I will slay you')
+                else:
+                    await message.channel.send('SLAY YOUR EMEMIES! VANQUISH YOUR FOES!')
+            elif roll <= 50:
+                await message.channel.send('slay')
+            
 
 
 client.run(TOKEN)
