@@ -154,7 +154,7 @@ async def on_message(message):
                         num *=  2.237
                     
                 print(num)
-                await message.channel.send(f'{origional_num} {unit_from} is {round(num*100)/100} {unit_to}')
+                await message.channel.send(f'{origional_num} {unit_from.upper()} is {round(num*100)/100} {unit_to.upper()}')
 
                 
                     
