@@ -225,7 +225,7 @@ async def on_message(message):
             if f'{str(word)} jim' in user_message:
                 print(username, 'said', word)
                 await message.channel.send(f'{nice_words[word]} {username}')
-
+# ----------Slay-----------
         # if user_message == 'slay':
         for _ in range(user_message.count('slay')):
             roll = random.randint(1, 100)
