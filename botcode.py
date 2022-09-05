@@ -21,6 +21,100 @@ def wait(sec, message):
     on = True
 
 
+def unit_conversion(input: str) -> str:
+
+    parts = input.split(' ')
+    try:
+        num = int(parts[1])
+        origional_num = num
+        unit_from = parts[2]
+        unit_to = parts[4]
+    except:
+        return 'ya fucked up mate, check your spelling'
+    temp = ['c', 'f', 'k']
+    dist = ['m', 'km', 'cm', 'in', 'ft', 'yd', 'mi']
+    speed = ['m/s', 'km/h', 'mi/h']
+    volume = ['l', 'oz', 'cup', 'gal', 'qt', 'pt', 'ml']
+
+    if unit_to in temp:
+        if unit_from == 'k':
+            num = num - 273.15
+        if unit_from == 'f':
+            num = (num - 32)*(5/9)
+
+        if unit_to == 'f':
+            num = (num * (9/5))+32
+        if unit_to == 'k':
+            num += 273.15
+
+    if unit_to in dist:
+        if unit_from == 'km':
+            num *= 1000
+        elif unit_from == 'cm':
+            num /= 100
+        elif unit_from == 'in':
+            num /= 39.37
+        elif unit_from == 'ft':
+            num /= 3.281
+        elif unit_from == 'yd':
+            num /= 1.094
+        elif unit_from == 'mi':
+            num *= 1609
+
+        if unit_to == 'km':
+            num /= 1000
+        elif unit_to == 'cm':
+            num *= 100
+        elif unit_to == 'in':
+            num *= 39.37
+        elif unit_to == 'ft':
+            num *= 3.281
+        elif unit_to == 'yd':
+            num *= 1.094
+        elif unit_to == 'mi':
+            num /= 1609
+
+    if unit_to in speed:
+        if unit_from == 'km/h':
+            num /= 3.6
+        elif unit_from == 'mi/h':
+            num /= 2.237
+
+        if unit_to == 'km/h':
+            num *= 3.6
+        elif unit_to == 'mi/h':
+            num *= 2.237
+
+    if unit_to in volume:
+        if unit_from == 'oz':
+            num /= 33.814
+        elif unit_from == 'cup':
+            num /= 4.167
+        elif unit_from == 'gal':
+            num *= 3.785
+        elif unit_from == 'qt':
+            num /= 1.057
+        elif unit_from == 'pt':
+            num /= 2.113
+        elif unit_from == 'ml':
+            num /= 1000
+
+        if unit_to == 'oz':
+            num *= 33.814
+        elif unit_to == 'cup':
+            num *= 4.167
+        elif unit_to == 'gal':
+            num /= 3.785
+        elif unit_to == 'qt':
+            num *= 1.057
+        elif unit_to == 'pt':
+            num *= 2.113
+        elif unit_to == 'ml':
+            num *= 1000
+
+    return f' {origional_num} {unit_from} is {round(num*100)/100} {unit_to}'
+
+
 @client.event
 async def on_ready():
     print('logged in as {0.user}'.format(client))
@@ -93,96 +187,11 @@ async def on_message(message):
 
 # ----------- Unit Conversion -------
             if 'convert' in user_message:
+                response = unit_conversion(user_message.lower())
                 # convert 15 C to F
-                parts = user_message.split(' ')
-                num = int(parts[1])
-                origional_num = num
-                unit_from = parts[2]
-                unit_to = parts[4]
-                temp = ['c', 'f', 'k']
-                dist = ['m', 'km', 'cm', 'in', 'ft', 'yd', 'mi']
-                speed = ['m/s', 'km/h', 'mi/h']
-                volume = ['l', 'oz', 'cup', 'gal', 'qt', 'pt', 'ml']
 
-                if unit_to in temp:
-                    if unit_from == 'k':
-                        num = num - 273.15
-                    if unit_from == 'f':
-                        num = (num - 32)*(5/9)
-
-                    if unit_to == 'f':
-                        num = (num * (9/5))+32
-                    if unit_to == 'k':
-                        num += 273.15
-
-                if unit_to in dist:
-                    if unit_from == 'km':
-                        num *= 1000
-                    elif unit_from == 'cm':
-                        num /= 100
-                    elif unit_from == 'in':
-                        num /= 39.37
-                    elif unit_from == 'ft':
-                        num /= 3.281
-                    elif unit_from == 'yd':
-                        num /= 1.094
-                    elif unit_from == 'mi':
-                        num *= 1609
-
-                    if unit_to == 'km':
-                        num /= 1000
-                    elif unit_to == 'cm':
-                        num *= 100
-                    elif unit_to == 'in':
-                        num *= 39.37
-                    elif unit_to == 'ft':
-                        num *= 3.281
-                    elif unit_to == 'yd':
-                        num *= 1.094
-                    elif unit_to == 'mi':
-                        num /= 1609
-
-                if unit_to in speed:
-                    if unit_from == 'km/h':
-                        num /= 3.6
-                    elif unit_from == 'mi/h':
-                        num /= 2.237
-
-                    if unit_to == 'km/h':
-                        num *= 3.6
-                    elif unit_to == 'mi/h':
-                        num *= 2.237
-
-                if unit_to in volume:
-                    if unit_from == 'oz':
-                        num /= 33.814
-                    elif unit_from == 'cup':
-                        num /= 4.167
-                    elif unit_from == 'gal':
-                        num *= 3.785
-                    elif unit_from == 'qt':
-                        num /= 1.057
-                    elif unit_from == 'pt':
-                        num /= 2.113
-                    elif unit_from == 'ml':
-                        num /= 1000
-
-                    if unit_to == 'oz':
-                        num *= 33.814
-                    elif unit_to == 'cup':
-                        num *= 4.167
-                    elif unit_to == 'gal':
-                        num /= 3.785
-                    elif unit_to == 'qt':
-                        num *= 1.057
-                    elif unit_to == 'pt':
-                        num *= 2.113
-                    elif unit_to == 'ml':
-                        num *= 1000
-
-                print(
-                    f'{username}: {origional_num} {unit_from} is {round(num*100)/100} {unit_to}')
-                await message.channel.send(f'{origional_num} {unit_from} is {round(num*100)/100} {unit_to}')
+                print(f'{username}: {response}')
+                await message.channel.send(response)
 
 # ----------- Squirrel -----------
             if user_message == 'squirrel':
