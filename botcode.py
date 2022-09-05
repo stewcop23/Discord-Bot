@@ -186,7 +186,7 @@ async def on_message(message):
                     print(username, 'used', word)
 
 # ----------- Unit Conversion -------
-            if 'convert' in user_message:
+            if 'convert' == user_message.split(' ')[0]:
                 response = unit_conversion(user_message.lower())
                 # convert 15 C to F
 
