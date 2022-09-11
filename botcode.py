@@ -6,9 +6,16 @@ from datetime import datetime
 import pytz
 from threading import Thread
 
+
 on = True
 TOKEN = pathlib.Path('TOKEN.txt').read_text()
 client = discord.Client()
+
+# ratio between unit to base unit(this number will be multiplied with the origional number to give the base unit)
+units = {'m': 1, 'km': 1000, 'cm': (1/100), 'in': (1/39.37), 'ft': (1/3.281), 'yd': (1/1.094), 'mi': 1609,
+         'm/s': 1, 'km/h': (1/3.6), 'mi/h': (1/2.237),
+         'l': 1, 'ml': (1/1000), 'oz': (1/33.814), 'cup': (1/4.167), 'gal': (3.785), 'qt': (1/1.057), 'pt': (1/2.113),
+         'g': 1, 'kg': 1000, 'mg': (1/1000), 'lb': 453.6}
 
 
 def wait(sec, message):
@@ -22,7 +29,7 @@ def wait(sec, message):
 
 
 def unit_conversion(input: str) -> str:
-
+    done = False
     parts = input.split(' ')
     try:
         num = int(parts[1])
@@ -31,11 +38,10 @@ def unit_conversion(input: str) -> str:
         unit_to = parts[4]
     except:
         return 'ya fucked up mate, check your spelling'
-    temp = ['c', 'f', 'k']
-    dist = ['m', 'km', 'cm', 'in', 'ft', 'yd', 'mi']
-    speed = ['m/s', 'km/h', 'mi/h']
-    volume = ['l', 'oz', 'cup', 'gal', 'qt', 'pt', 'ml']
 
+    temp = ['c', 'f', 'k']
+
+# temp has to be done differently cuz the zeroes arent the same
     if unit_to in temp:
         if unit_from == 'k':
             num = num - 273.15
@@ -46,73 +52,18 @@ def unit_conversion(input: str) -> str:
             num = (num * (9/5))+32
         if unit_to == 'k':
             num += 273.15
+        done = True
 
-    if unit_to in dist:
-        if unit_from == 'km':
-            num *= 1000
-        elif unit_from == 'cm':
-            num /= 100
-        elif unit_from == 'in':
-            num /= 39.37
-        elif unit_from == 'ft':
-            num /= 3.281
-        elif unit_from == 'yd':
-            num /= 1.094
-        elif unit_from == 'mi':
-            num *= 1609
+    elif unit_from in units:
+        num *= units[unit_from]
+        if unit_to in units:
+            num /= units[unit_to]
+            done = True
 
-        if unit_to == 'km':
-            num /= 1000
-        elif unit_to == 'cm':
-            num *= 100
-        elif unit_to == 'in':
-            num *= 39.37
-        elif unit_to == 'ft':
-            num *= 3.281
-        elif unit_to == 'yd':
-            num *= 1.094
-        elif unit_to == 'mi':
-            num /= 1609
-
-    if unit_to in speed:
-        if unit_from == 'km/h':
-            num /= 3.6
-        elif unit_from == 'mi/h':
-            num /= 2.237
-
-        if unit_to == 'km/h':
-            num *= 3.6
-        elif unit_to == 'mi/h':
-            num *= 2.237
-
-    if unit_to in volume:
-        if unit_from == 'oz':
-            num /= 33.814
-        elif unit_from == 'cup':
-            num /= 4.167
-        elif unit_from == 'gal':
-            num *= 3.785
-        elif unit_from == 'qt':
-            num /= 1.057
-        elif unit_from == 'pt':
-            num /= 2.113
-        elif unit_from == 'ml':
-            num /= 1000
-
-        if unit_to == 'oz':
-            num *= 33.814
-        elif unit_to == 'cup':
-            num *= 4.167
-        elif unit_to == 'gal':
-            num /= 3.785
-        elif unit_to == 'qt':
-            num *= 1.057
-        elif unit_to == 'pt':
-            num *= 2.113
-        elif unit_to == 'ml':
-            num *= 1000
-
-    return f' {origional_num} {unit_from} is {round(num*100)/100} {unit_to}'
+    if done:
+        return f' {origional_num} {unit_from} is {round(num*100)/100} {unit_to}'
+    else:
+        return 'I dont know one of those units'
 
 
 @client.event
