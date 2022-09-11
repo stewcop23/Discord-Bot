@@ -14,7 +14,7 @@ client = discord.Client()
 # ratio between unit to base unit(this number will be multiplied with the origional number to give the base unit)
 units = {'m': 1, 'km': 1000, 'cm': (1/100), 'in': (1/39.37), 'ft': (1/3.281), 'yd': (1/1.094), 'mi': 1609,
          'm/s': 1, 'km/h': (1/3.6), 'mi/h': (1/2.237),
-         'l': 1, 'ml': (1/1000), 'oz': (1/33.814), 'cup': (1/4.167), 'gal': (3.785), 'qt': (1/1.057), 'pt': (1/2.113),
+         'l': 1, 'ml': (1/1000), 'oz': (1/33.814), 'cup': (1/4.167), 'cups': (1/4.167), 'gal': (3.785), 'qt': (1/1.057), 'pt': (1/2.113),
          'g': 1, 'kg': 1000, 'mg': (1/1000), 'lb': 453.6}
 
 
