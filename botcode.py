@@ -17,6 +17,9 @@ units = {'m': 1, 'km': 1000, 'cm': (1/100), 'in': (1/39.37), 'ft': (1/3.281), 'y
          'l': 1, 'ml': (1/1000), 'oz': (1/33.814), 'cup': (1/4.167), 'cups': (1/4.167), 'gal': (3.785), 'qt': (1/1.057), 'pt': (1/2.113),
          'g': 1, 'kg': 1000, 'mg': (1/1000), 'lb': 453.6}
 
+times = {"Western Canada/USA": 'Canada/Pacific', "New Jersey": 'America/New_York',
+         "England": "Etc/GMT", "Lebanon": 'Etc/GMT-3', "Sydney": 'Australia/NSW'}
+
 
 def wait(sec, message):
     global on
@@ -36,21 +39,20 @@ def unit_conversion(input: str) -> str:
         origional_num = num
         unit_from = parts[2]
         unit_to = parts[4]
-    except:
+    except Exception:
         return 'ya fucked up mate, check your spelling'
 
     temp = ['c', 'f', 'k']
-
 # temp has to be done differently cuz the zeroes arent the same
     if unit_to in temp:
-        if unit_from == 'k':
-            num = num - 273.15
         if unit_from == 'f':
             num = (num - 32)*(5/9)
+        elif unit_from == 'k':
+            num -= 273.15
 
         if unit_to == 'f':
             num = (num * (9/5))+32
-        if unit_to == 'k':
+        elif unit_to == 'k':
             num += 273.15
         done = True
 
@@ -106,24 +108,12 @@ async def on_message(message):
 # ----------- Time -----------
             if user_message == 'time':
 
-                pacific = pytz.timezone('Canada/Pacific')
-                pacTime = datetime.now(pacific).strftime("%H:%M:%S")
-
-                aussie = pytz.timezone('Australia/NSW')
-                ausTime = datetime.now(aussie).strftime("%H:%M:%S")
-
-                ed = pytz.timezone('America/New_York')
-                edt = datetime.now(ed).strftime("%H:%M:%S")
-
-                eng = pytz.timezone("Etc/GMT")
-                engtime = datetime.now(eng).strftime("%H:%M:%S")
-
-                leb = pytz.timezone('Etc/GMT-3')
-                lebtime = datetime.now(leb).strftime("%H:%M:%S")
+                timeline = ""  # LMAO timeline. Im so funni an lonly :(
+                for zone in times:
+                    timeline += zone + ": " + datetime.now(pytz.timezone(times[zone])).strftime("%H:%M:%S") + "\n"
 
                 print(username, 'used time')
-                print('^', pacTime, ausTime, edt, engtime, lebtime)
-                await message.channel.send(f'24Hr (H:M:S) time in: \n Western Canada/USA: {pacTime} \n New Jeresy: {edt} \n England: {engtime} \n Lebanon: {lebtime} \n Sydney: {ausTime}')
+                await message.channel.send(f'24Hr (H:M:S) time in: \n{timeline}')
 
 # ----------- Basic Responces --------------
             basic_responces = {'gay': f'{username} is gay :rainbow_flag:',
@@ -186,7 +176,6 @@ async def on_message(message):
                 print(username, 'said', word)
                 await message.channel.send(f'{nice_words[word]} {username}')
 # ----------Slay-----------
-        # if user_message == 'slay':
         for _ in range(user_message.count('slay')):
             roll = random.randint(1, 100)
             print(username, 'slayed', roll)
