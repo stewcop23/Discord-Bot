@@ -108,7 +108,7 @@ async def on_message(message):
 # ----------- Time -----------
             if user_message == 'time':
 
-                timeline = ""  # LMAO timeline. Im so funni an lonly :(
+                timeline = ""
                 for zone in times:
                     timeline += zone + ": " + datetime.now(pytz.timezone(times[zone])).strftime("%H:%M:%S") + "\n"
 
@@ -176,6 +176,20 @@ async def on_message(message):
             if f'{str(word)} jim' in user_message:
                 print(username, 'said', word)
                 await message.channel.send(f'{nice_words[word]} {username}')
+                
+                
+#----------------Activate Jim-----------------------
+        if user_message == 'activate jim':
+            await message.channel.send('activated')
+            loopable = True
+            while loopable == True:
+                tosend = input("Send: ")
+                if tosend == "its over":
+                    loopable = False
+                    print("Jim is now turned off")
+                elif len(tosend) > 0:
+                    await message.channel.send(f'{tosend}')
+                    print(f"sent \"{tosend}\"")
 # ----------Slay-----------
         for _ in range(user_message.count('slay')):
             roll = random.randint(1, 100)
