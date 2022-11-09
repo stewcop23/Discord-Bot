@@ -119,7 +119,8 @@ async def on_message(message):
             basic_responces = {'gay': f'{username} is gay :rainbow_flag:',
                                'trans': f'{username} is trans :transgender_flag:',
                                'fish': f'{username} is forcing us to pretend that this is a planetary body',
-                               'chock-a-block': 'The lights may be cactus'}
+                               'chock-a-block': 'The lights may be cactus',
+                               "is jim there?":"Hello yes I am alive"}
 
             for word in basic_responces:
                 if user_message == word:
