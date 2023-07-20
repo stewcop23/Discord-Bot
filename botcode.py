@@ -5,6 +5,7 @@ import time
 from datetime import datetime
 import pytz
 from threading import Thread
+import re
 
 
 on = True
@@ -20,7 +21,8 @@ units = {'m': 1, 'km': 1000, 'cm': (1/100), 'in': (1/39.37), 'ft': (1/3.281), 'y
 times = {"Western Canada/USA": 'Canada/Pacific', "New Jersey": 'America/New_York',
          "England": "Etc/GMT", "Lebanon": 'Etc/GMT-3', "Sydney": 'Australia/NSW'}
 
-
+swearing_chance = 0.5
+slay_chance = 0.5
 def wait(sec, message):
     global on
     on = False
@@ -90,8 +92,84 @@ async def on_message(message):
         print('a')
 
     if on:
+        global swearing_chance
+        global slay_chance
+        # ---------Swearing Responses------------
+        swears = ['fuck', 'shit', 'cock', 'cunt',
+                  'bitch', 'bullshit', 'dick', 'pussy', 'stfu']
+        for word in swears:
+            for _ in range(user_message.count(word)):
+                chance = random.random()
+                print(username, 'swore', round(chance,2))
+                if chance <= swearing_chance:
+                    if chance <= (swearing_chance/100):
+                        await message.channel.send(f'{message.author.mention}, NO FUCKING SWEARING')
+                        print('^sweary warning sent')
+                    else:
+                        await message.channel.send(f'{message.author.mention}, NO SWEARING')
+                        print('^ warning sent')
+
+# ---------Thankful/Apllologetic Responses------------
+        nice_words = {'thanks': 'you\'re welcome', 'cheers': 'no problem',
+                      'sorry': 'it\'s ok', 'im sad': 'it\'s ok', 'hi': 'hi'}
+
+        for word in nice_words:
+            if f'{str(word)} jim' in user_message:
+                print(username, 'said', word)
+                await message.channel.send(f'{nice_words[word]} {username}')
+                
+                
+#----------------Activate Jim-----------------------
+        if user_message == 'activate jim':
+            await message.channel.send('activated')
+            loopable = True
+            while loopable == True:
+                tosend = input("Send: ")
+                if tosend == "its over":
+                    loopable = False
+                    print("Jim is now turned off")
+                elif len(tosend) > 0:
+                    await message.channel.send(f'{tosend}')
+                    print(f"sent \"{tosend}\"")
+# ----------Slay-----------
+        for _ in range(user_message.count('slay')):
+            roll = random.random()
+            print(username, 'slayed', round(roll,2))
+            if roll > .95:
+                roll = random.randint(0, 2)
+                print(f'^roll: {roll}')
+                if roll > 0:
+                    await message.channel.send('I will slay you')
+                else:
+                    await message.channel.send('SLAY YOUR EMEMIES! VANQUISH YOUR FOES!')
+            elif roll <= slay_chance:
+                await message.channel.send(':sparkles:slay:sparkles:')
+        
         if channel == 'bot-controls':
 
+#------- Swearing updating -------
+            if re.search("^update swearing",user_message.lower()) is not None:
+                swearing_chance = float(user_message.split(' ')[2])
+                print(f'{username} has updated swearing chance to {swearing_chance}')
+                await message.channel.send(f'swearing response chance is now {swearing_chance}')
+
+#------- Query swearing  ---------
+            if re.search("^check swearing",user_message.lower()) is not None:
+                print(f'{username} has asked to check the swearing chance ({swearing_chance})')
+                await message.channel.send(f'swearing response is {swearing_chance}')
+
+#--------- Slay Updating -------
+            if re.search("^update slay",user_message.lower()) is not None:
+                slay_chance = float(user_message.split(' ')[2])
+                print(f'{username} has updated slay chance to {slay_chance}')
+                await message.channel.send(f'slay response chance is now {slay_chance}')
+
+#----------- Query Slay ----------
+            if re.search("^check slay",user_message.lower()) is not None:
+                print(f'{username} has asked to check the slay chance ({slay_chance})')
+                await message.channel.send(f'slay response is {slay_chance}')
+
+#--------- Alive-ness test -----
             if user_message == 'test':
                 await message.channel.send('test')
 
@@ -153,56 +231,7 @@ async def on_message(message):
                     await message.channel.send('you should eat that')
 
 
-# ---------Swearing Responses------------
-        swears = ['fuck', 'shit', 'cock', 'cunt',
-                  'bitch', 'bullshit', 'dick', 'pussy', 'stfu']
-        for word in swears:
-            for _ in range(user_message.count(word)):
-                chance = random.randint(1, 10)
-                print(username, 'swore', chance)
-                if chance <= 5:
-                    if chance <= 1:
-                        await message.channel.send(f'{message.author.mention}, NO FUCKING SWEARING')
-                        print('^sweary warning sent')
-                    else:
-                        await message.channel.send(f'{message.author.mention}, NO SWEARING')
-                        print('^ warning sent')
 
-# ---------Thankful/Apllologetic Responses------------
-        nice_words = {'thanks': 'you\'re welcome', 'cheers': 'no problem',
-                      'sorry': 'it\'s ok', 'im sad': 'it\'s ok', 'hi': 'hi'}
-
-        for word in nice_words:
-            if f'{str(word)} jim' in user_message:
-                print(username, 'said', word)
-                await message.channel.send(f'{nice_words[word]} {username}')
-                
-                
-#----------------Activate Jim-----------------------
-        if user_message == 'activate jim':
-            await message.channel.send('activated')
-            loopable = True
-            while loopable == True:
-                tosend = input("Send: ")
-                if tosend == "its over":
-                    loopable = False
-                    print("Jim is now turned off")
-                elif len(tosend) > 0:
-                    await message.channel.send(f'{tosend}')
-                    print(f"sent \"{tosend}\"")
-# ----------Slay-----------
-        for _ in range(user_message.count('slay')):
-            roll = random.randint(1, 100)
-            print(username, 'slayed', roll)
-            if roll == 1:
-                roll = random.randint(0, 2)
-                print(f'^roll: {roll}')
-                if roll > 0:
-                    await message.channel.send('I will slay you')
-                else:
-                    await message.channel.send('SLAY YOUR EMEMIES! VANQUISH YOUR FOES!')
-            elif roll <= 50:
-                await message.channel.send(':sparkles:slay:sparkles:')
 
 
 client.run(TOKEN)
