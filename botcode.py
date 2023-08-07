@@ -6,10 +6,16 @@ from datetime import datetime
 import pytz
 from threading import Thread
 import re
+import sys
 
 
+if len(sys.argv)>1:
+    cp = sys.argv[0]
+    TOKEN = pathlib.Path(sys.argv[1]).read_text()
+else:
+    TOKEN = pathlib.Path(re.search('^.*\/(?=[a-zA-Z]*\.py)',sys.argv[0]).group() + 'TOKEN.txt').read_text()
 on = True
-TOKEN = pathlib.Path('TOKEN.txt').read_text()
+
 client = discord.Client()
 
 # ratio between unit to base unit(this number will be multiplied with the origional number to give the base unit)
@@ -108,6 +114,8 @@ async def on_message(message):
                     else:
                         await message.channel.send(f'{message.author.mention}, NO SWEARING')
                         print('^ warning sent')
+                else:
+                    print("^curse ignored")
 
 # ---------Thankful/Apllologetic Responses------------
         nice_words = {'thanks': 'you\'re welcome', 'cheers': 'no problem',
@@ -143,7 +151,10 @@ async def on_message(message):
                 else:
                     await message.channel.send('SLAY YOUR EMEMIES! VANQUISH YOUR FOES!')
             elif roll <= slay_chance:
+                print("^slay!")
                 await message.channel.send(':sparkles:slay:sparkles:')
+            else:
+                print("^slay failed :(")
         
         if channel == 'bot-controls':
 
