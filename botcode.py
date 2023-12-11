@@ -103,7 +103,7 @@ async def on_message(message):
         # ---------Swearing Responses------------
         swears = ['fuck', 'shit', 'cock', 'cunt',
                   'bitch', 'bullshit', 'dick', 'pussy', 'stfu']
-        for word in swears:
+        for word in swears:# can probably combine these two lines and make code way more efficient. use for swears in message, should work
             for _ in range(user_message.count(word)):
                 chance = random.random()
                 print(username, 'swore', round(chance,2))
@@ -203,6 +203,11 @@ async def on_message(message):
 
                 print(username, 'used time')
                 await message.channel.send(f'24Hr (H:M:S) time in: \n{timeline}')
+                
+#------------ Find Time -------
+            #Needs: current timezone, destination timezone, date and time (maybe relative)(convert to utc)
+            # Find offset between timezones, add offset to date (then convert out of utc)
+            # repeat for all timezones
 
 # ----------- Basic Responces --------------
             basic_responces = {'gay': f'{username} is gay :rainbow_flag:',
